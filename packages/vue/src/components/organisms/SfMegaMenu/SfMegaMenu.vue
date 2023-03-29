@@ -9,14 +9,16 @@
         :title="active || title"
         :back="true"
         class="sf-mega-menu__bar"
-        @click:back="back()"
+        @click:back="back"
       />
       <div class="sf-mega-menu__content">
         <div class="sf-mega-menu__menu">
-          <!-- @slot Slot for menu column -->
           <slot />
         </div>
-        <div v-if="$slots.aside" class="sf-mega-menu__aside">
+        <div
+          :class="{ 'display-none': !$slots.aside }"
+          class="sf-mega-menu__aside"
+        >
           <!-- @slot @deprecated will be removed in 1.0.0 -->
           <SfMenuItem
             :label="asideTitle"
@@ -34,10 +36,6 @@ import SfMegaMenuColumn from "./_internal/SfMegaMenuColumn.vue";
 Vue.component("SfMegaMenuColumn", SfMegaMenuColumn);
 import SfBar from "../../molecules/SfBar/SfBar.vue";
 import SfMenuItem from "../../molecules/SfMenuItem/SfMenuItem";
-import {
-  mapMobileObserver,
-  unMapMobileObserver,
-} from "../../../utilities/mobile-observer";
 export default {
   name: "SfMegaMenu",
   components: {
@@ -83,20 +81,6 @@ export default {
       value: this.changeActive,
     });
     return { megaMenu };
-  },
-  computed: {
-    ...mapMobileObserver(),
-  },
-  watch: {
-    isMobile: {
-      handler() {
-        this.active = "";
-      },
-      immediate: true,
-    },
-  },
-  beforeDestroy() {
-    unMapMobileObserver();
   },
   methods: {
     changeActive(payload) {

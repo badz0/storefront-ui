@@ -1,5 +1,5 @@
 <template>
-  <div class="sf-skeleton" :class="`sf-skeleton--${type}`">
+  <div class="sf-skeleton" :class="classFromProps">
     <slot />
   </div>
 </template>
@@ -7,14 +7,15 @@
 export default {
   name: "SfSkeleton",
   props: {
-    /**
-     * Defines shape for SfSkeleton.
-     * Available values: "paragraph", "image", "button", "input", "avatar"
-     */
     type: {
       type: String,
       default: "paragraph",
       validator: (value) => ["paragraph", "image", "button", "input", "avatar"],
+    },
+  },
+  computed: {
+    classFromProps() {
+      return `sf-skeleton--${this.type}`;
     },
   },
 };

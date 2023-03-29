@@ -2,31 +2,52 @@
   <div
     :class="[data.class, data.staticClass, 'sf-quantity-selector']"
     :style="[data.style, data.staticStyle]"
+    :aria-label="props.ariaLabel"
   >
     <component
       :is="injections.components.SfButton"
-      :disabled="props.disabled"
+      :disabled="
+        props.disabled || Boolean(props.min !== null && props.qty <= props.min)
+      "
       class="sf-button--pure sf-quantity-selector__button"
-      data-testid="+"
-      @click="$options.handleInput(props.qty - 1, listeners)"
+      data-testid="decrease"
+      @click="
+        $options.handleInput(
+          Number(props.qty) - 1,
+          listeners,
+          props.min,
+          props.max
+        )
+      "
     >
       &minus;
     </component>
     <component
       :is="injections.components.SfInput"
       type="number"
-      :value="props.qty"
+      :name="$options.uniqueKey()"
+      :value="Number(props.qty)"
       :disabled="props.disabled"
       class="sf-quantity-selector__input"
       data-testid="sf-quantity-selector input"
-      @input="$options.handleInput($event, listeners)"
+      @input="$options.handleInput($event, listeners, props.min, props.max)"
+      @blur="$options.handleBlur(listeners)"
     />
     <component
       :is="injections.components.SfButton"
-      :disabled="props.disabled"
+      :disabled="
+        props.disabled || Boolean(props.max !== null && props.qty >= props.max)
+      "
       class="sf-button--pure sf-quantity-selector__button"
-      data-testid="-"
-      @click="$options.handleInput(props.qty + 1, listeners)"
+      data-testid="increase"
+      @click="
+        $options.handleInput(
+          Number(props.qty) + 1,
+          listeners,
+          props.min,
+          props.max
+        )
+      "
     >
       +
     </component>
@@ -50,7 +71,6 @@ export default {
     prop: "qty",
   },
   props: {
-    /** Quantity */
     qty: {
       type: [Number, String],
       default: 1,
@@ -59,9 +79,35 @@ export default {
       type: Boolean,
       default: false,
     },
+    min: {
+      type: Number,
+      default: null,
+    },
+    max: {
+      type: Number,
+      default: null,
+    },
+    ariaLabel: {
+      type: String,
+      default: "Quantity",
+    },
   },
-  handleInput(qty, listeners) {
-    return listeners.input && listeners.input(qty < 1 || isNaN(qty) ? 1 : qty);
+  handleInput(qty, listeners, min, max) {
+    // adjust qty per min/max if needed
+    const minimum = min || 1;
+    if (qty < minimum || isNaN(qty)) {
+      qty = minimum;
+    } else if (max !== null && qty > max) {
+      qty = max;
+    }
+    return listeners.input && listeners.input(qty);
+  },
+  handleBlur(listeners) {
+    return listeners.blur && listeners.blur();
+  },
+  uniqueKey() {
+    const key = Math.random().toString(16).slice(2);
+    return "quantitySelector" + key;
   },
 };
 </script>

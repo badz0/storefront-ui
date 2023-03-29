@@ -5,20 +5,20 @@
     v-bind="data.attrs"
     v-on="listeners"
   >
-    <!--@slot Heading title. Slot content will replace default <h> tag-->
     <slot name="title" v-bind="{ props }">
       <component
         :is="`h${props.level}`"
         class="sf-heading__title"
-        :class="props.level > 1 && `h${props.level}`"
+        :class="props.level > 1 && $options.headingClass(props.level)"
       >
         {{ props.title }}
       </component>
     </slot>
-    <!--@slot Heading description. Slot content will replace default <div> tag-->
     <slot name="description" v-bind="{ props }">
       <div
-        v-if="$options.hasDescription(props.description, slots)"
+        :class="{
+          'display-none': !$options.hasDescription(props.description, slots),
+        }"
         class="sf-heading__description"
       >
         {{ props.description }}
@@ -30,23 +30,14 @@
 export default {
   name: "SfHeading",
   props: {
-    /**
-     * Heading level
-     */
     level: {
       type: Number,
       default: 2,
     },
-    /**
-     * Heading title
-     */
     title: {
       type: String,
       default: "",
     },
-    /**
-     * Heading description
-     */
     description: {
       type: String,
       default: "",
@@ -54,6 +45,9 @@ export default {
   },
   hasDescription(descriptionProp, slots) {
     return !!descriptionProp || slots().description;
+  },
+  headingClass(headingLevel) {
+    return headingLevel <= 6 ? `h${headingLevel}` : `h2`;
   },
 };
 </script>

@@ -3,7 +3,7 @@
     :class="[data.class, data.staticClass, 'sf-breadcrumbs']"
     :style="[data.style, data.staticStyle]"
     v-bind="data.attrs"
-    aria-label="breadcrumb"
+    :aria-label="props.ariaLabel"
     v-on="listeners"
   >
     <ol class="sf-breadcrumbs__list">
@@ -16,7 +16,6 @@
         "
       >
         <template v-if="$options.breadcrumbLast(props.breadcrumbs) !== i">
-          <!-- @slot Custom markup for previous pages (binds `breadcrumb` object) -->
           <slot name="link" v-bind="{ breadcrumb }">
             <component
               :is="injections.components.SfLink"
@@ -29,7 +28,6 @@
           </slot>
         </template>
         <template v-else>
-          <!-- @slot Custom markup for current page (binds `breadcrumb` object) -->
           <slot name="current" v-bind="{ breadcrumb }">
             <component
               :is="injections.components.SfLink"
@@ -54,12 +52,13 @@ export default {
     },
   },
   props: {
-    /**
-     * List of breadcrumbs (array of nested objects: `[ { text, route } ]`)
-     */
     breadcrumbs: {
       type: Array,
       default: () => [],
+    },
+    ariaLabel: {
+      type: String,
+      default: "breadcrumb",
     },
   },
   breadcrumbLast(breadcrumbs) {

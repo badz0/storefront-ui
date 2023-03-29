@@ -23,6 +23,8 @@
   }
   &__image,
   &__picture {
+    --image-width: var(--product-card-horizontal-image-width, 100%);
+    --image-height: var(--product-card-horizontal-image-height, auto);
     transition: var(
       --product-card-horizontal-image-transition,
       opacity 150ms ease-in-out
@@ -53,10 +55,7 @@
   &__actions-wrapper {
     flex: 1;
     align-items: var(--product-card-horizontal-actions-wrapper, flex-start);
-    margin: var(
-      --product-card-horizontal-actions-wrapper-margin,
-      var(--spacer-sm) 0 0 0
-    );
+    margin: var(--product-card-horizontal-actions-wrapper-margin);
   }
   &__title {
     margin: 0;

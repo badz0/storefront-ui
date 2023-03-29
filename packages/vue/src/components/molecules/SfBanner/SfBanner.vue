@@ -1,46 +1,69 @@
 <template>
-  <section
-    class="sf-banner"
-    :style="style"
-    v-on="isMobileView ? $listeners : {}"
-  >
+  <section class="sf-banner" :style="style" v-on="$listeners">
     <component :is="wrapper" class="sf-banner__wrapper" :link="link">
       <slot name="subtitle" v-bind="{ subtitle }">
-        <h2 v-if="subtitle" class="sf-banner__subtitle">
+        <span
+          :class="{ 'display-none': !subtitle }"
+          class="sf-banner__subtitle"
+        >
           {{ subtitle }}
-        </h2>
+        </span>
       </slot>
       <slot name="title" v-bind="{ title }">
-        <h1 v-if="title" class="sf-banner__title">
+        <span :class="{ 'display-none': !title }" class="sf-banner__title">
           {{ title }}
-        </h1>
+        </span>
       </slot>
       <slot name="description" v-bind="{ description }">
-        <p v-if="description" class="sf-banner__description">
+        <span
+          :class="{ 'display-none': !description }"
+          class="sf-banner__description"
+        >
           {{ description }}
-        </p>
+        </span>
+      </slot>
+      <slot name="call-to-action" v-bind="{ buttonText }" />
+    </component>
+    <div class="sf-banner__wrapper-desktop" :link="link">
+      <slot name="subtitle" v-bind="{ subtitle }">
+        <span
+          :class="{ 'display-none': !subtitle }"
+          class="sf-banner__subtitle"
+        >
+          {{ subtitle }}
+        </span>
+      </slot>
+      <slot name="title" v-bind="{ title }">
+        <span :class="{ 'display-none': !title }" class="sf-banner__title">
+          {{ title }}
+        </span>
+      </slot>
+      <slot name="description" v-bind="{ description }">
+        <span
+          :class="{ 'display-none': !description }"
+          class="sf-banner__description"
+        >
+          {{ description }}
+        </span>
       </slot>
       <slot name="call-to-action" v-bind="{ buttonText }">
         <SfButton
-          v-if="buttonText && !isMobileView"
+          v-if="buttonText"
           :link="link"
           class="sf-banner__call-to-action color-secondary"
           data-testid="banner-cta-button"
-          v-on="!isMobileView ? $listeners : {}"
+          v-on="$listeners"
         >
           {{ buttonText }}
         </SfButton>
       </slot>
-    </component>
+    </div>
+    <slot name="img-tag" />
   </section>
 </template>
 <script>
 import SfButton from "../../atoms/SfButton/SfButton.vue";
 import SfLink from "../../atoms/SfLink/SfLink.vue";
-import {
-  mapMobileObserver,
-  unMapMobileObserver,
-} from "../../../utilities/mobile-observer";
 export default {
   name: "SfBanner",
   components: {
@@ -48,16 +71,10 @@ export default {
     SfLink,
   },
   props: {
-    /**
-     * Banner title
-     */
     title: {
       type: String,
       default: "",
     },
-    /**
-     * Banner subtitle (at the top)
-     */
     subtitle: {
       type: String,
       default: "",
@@ -66,37 +83,48 @@ export default {
       type: String,
       default: "",
     },
-    /** text that will be displayed inside the button. You can replace the button  with "call-to-action" slot */
     buttonText: {
       type: String,
       default: "",
     },
-    /** link to be used in call to action button if necessary */
     link: {
       type: String,
-      default: "",
+      default: null,
     },
-    /** Background color in HEX (eg #FFFFFF) */
     background: {
       type: String,
       default: "",
     },
-    /** Background image. Influenced by $banner-background-size, $banner-background-position CSS props. */
     image: {
       type: [String, Object],
       default: "",
     },
-  },
-  data() {
-    return {
-      isMobileView: false,
-    };
+    imageTag: {
+      type: String,
+      default: null,
+    },
+    nuxtImgConfig: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   computed: {
-    ...mapMobileObserver(),
     style() {
       const image = this.image;
       const background = this.background;
+      const nuxtImgConvert = (imgUrl) => {
+        return `url(${this.$img(imgUrl, this.nuxtImgConfig)})`;
+      };
+      if (this.imageTag === "nuxt-img" || this.imageTag === "nuxt-picture") {
+        return {
+          "--_banner-background-image": image.mobile
+            ? nuxtImgConvert(image.mobile)
+            : nuxtImgConvert(image),
+          "--_banner-background-desktop-image":
+            image.desktop && nuxtImgConvert(image.desktop),
+          "--_banner-background-color": background,
+        };
+      }
       return {
         "--_banner-background-image": image.mobile
           ? `url(${image.mobile})`
@@ -107,14 +135,8 @@ export default {
       };
     },
     wrapper() {
-      return !this.isMobileView ? "div" : this.link ? "SfLink" : "SfButton";
+      return this.link ? "SfLink" : "SfButton";
     },
-  },
-  mounted() {
-    this.isMobileView = this.isMobile;
-  },
-  beforeDestroy() {
-    unMapMobileObserver();
   },
 };
 </script>

@@ -14,12 +14,13 @@
       },
     ]"
     :style="[data.style, data.staticStyle]"
-    :disabled="props.disabled"
+    :aria-disabled="props.disabled"
     :link="props.link"
+    :type="props.type"
+    :aria-label="props.ariaLabel"
     v-bind="data.attrs"
-    v-on="listeners"
+    v-on="!props.disabled ? listeners : {}"
   >
-    <!--@slot Use this slot to place content inside the button.-->
     <slot />
   </component>
 </template>
@@ -37,19 +38,22 @@ export default {
     focus,
   },
   props: {
-    /**
-     * Native button disabled attribute
-     */
     disabled: {
       type: Boolean,
       default: false,
     },
-    /**
-     * Link for "a" tag, when empty it is button.
-     */
+    type: {
+      type: String,
+      default: "button",
+      validator: (value) => ["button", "submit", "reset"].includes(value),
+    },
     link: {
       type: [String, Object],
-      default: "",
+      default: null,
+    },
+    ariaLabel: {
+      type: String,
+      default: "button",
     },
   },
   linkActive(link, disabled) {

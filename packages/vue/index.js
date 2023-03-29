@@ -21,7 +21,7 @@ import SfProperty from "./src/components/atoms/SfProperty/SfProperty.vue";
 import SfQuantitySelector from "./src/components/atoms/SfQuantitySelector/SfQuantitySelector.vue";
 import SfRating from "./src/components/atoms/SfRating/SfRating.vue";
 import SfSkeleton from "./src/components/atoms/SfSkeleton/SfSkeleton.vue";
-import SfTextarea from "./src/components/atoms/SfTexarea/SfTextarea.vue";
+import SfTextarea from "./src/components/atoms/SfTextarea/SfTextarea.vue";
 import SfAddressPicker from "./src/components/molecules/SfAddressPicker/SfAddressPicker.vue";
 import SfAddToCart from "./src/components/molecules/SfAddToCart/SfAddToCart.vue";
 import SfAlert from "./src/components/molecules/SfAlert/SfAlert.vue";
@@ -50,7 +50,6 @@ import SfScrollable from "./src/components/molecules/SfScrollable/SfScrollable.v
 import SfSearchBar from "./src/components/molecules/SfSearchBar/SfSearchBar.vue";
 import SfSection from "./src/components/molecules/SfSection/SfSection.vue";
 import SfSelect from "./src/components/molecules/SfSelect/SfSelect.vue";
-import SfSlidingSection from "./src/components/molecules/SfSlidingSection/SfSlidingSection.vue";
 import SfSteps from "./src/components/molecules/SfSteps/SfSteps.vue";
 import SfSticky from "./src/components/molecules/SfSticky/SfSticky.vue";
 import SfTile from "./src/components/molecules/SfTile/SfTile.vue";
@@ -73,6 +72,16 @@ import SfStoreLocator from "./src/components/organisms/SfStoreLocator/SfStoreLoc
 import SfTable from "./src/components/organisms/SfTable/SfTable.vue";
 import SfTabs from "./src/components/organisms/SfTabs/SfTabs.vue";
 import SfTopBar from "./src/components/organisms/SfTopBar/SfTopBar.vue";
+import SfConfirmOrder from "./src/components/templates/SfConfirmOrder/SfConfirmOrder.vue";
+import SfMyNewsletter from "./src/components/templates/SfMyNewsletter/SfMyNewsletter.vue";
+import SfMyProfile from "./src/components/templates/SfMyProfile/SfMyProfile.vue";
+import SfOrderHistory from "./src/components/templates/SfOrderHistory/SfOrderHistory.vue";
+import SfOrderReview from "./src/components/templates/SfOrderReview/SfOrderReview.vue";
+import SfOrderSummary from "./src/components/templates/SfOrderSummary/SfOrderSummary.vue";
+import SfPayment from "./src/components/templates/SfPayment/SfPayment.vue";
+import SfPersonalDetails from "./src/components/templates/SfPersonalDetails/SfPersonalDetails.vue";
+import SfShipping from "./src/components/templates/SfShipping/SfShipping.vue";
+import SfShippingDetails from "./src/components/templates/SfShippingDetails/SfShippingDetails.vue";
 
 export {
   SfArrow,
@@ -126,7 +135,6 @@ export {
   SfSearchBar,
   SfSection,
   SfSelect,
-  SfSlidingSection,
   SfSteps,
   SfSticky,
   SfTile,
@@ -149,4 +157,14 @@ export {
   SfTable,
   SfTabs,
   SfTopBar,
+  SfConfirmOrder,
+  SfMyNewsletter,
+  SfMyProfile,
+  SfOrderHistory,
+  SfOrderReview,
+  SfOrderSummary,
+  SfPayment,
+  SfPersonalDetails,
+  SfShipping,
+  SfShippingDetails,
 };

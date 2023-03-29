@@ -3,12 +3,86 @@ import { SfBreadcrumbs } from "@storefront-ui/vue";
 export default {
   title: "Components/Atoms/Breadcrumbs",
   component: SfBreadcrumbs,
+  parameters: {
+    // do not modify cssprops manually, they are generated automatically by update-components-docs script
+    cssprops: {
+      "breadcrumbs-list-item-before-padding": {
+        value: "0 var(--spacer-sm)",
+        control: "text",
+      },
+      "breadcrumbs-list-item-seperator": { value: '"|"', control: "text" },
+      "breadcrumbs-list-item-before-color": {
+        value: "var(--c-text-muted)",
+        control: "text",
+      },
+      "breadcrumbs-font": { value: "", control: "text" },
+      "breadcrumbs-font-weight": {
+        value: "var(--font-weight--normal)",
+        control: "text",
+      },
+      "breadcrumbs-font-size": {
+        value: "var(--font-size--xs)",
+        control: "text",
+      },
+      "breadcrumbs-font-line-height": { value: "1.6", control: "text" },
+      "breadcrumbs-font-family": {
+        value: "var(--font-family--secondary)",
+        control: "text",
+      },
+      "link-color": {
+        value: "var(--c-text-muted)",
+        description: "Overridden other component's CSS variable",
+        control: "text",
+      },
+      "link-text-decoration": {
+        value: "none",
+        description: "Overridden other component's CSS variable",
+        control: "text",
+      },
+    },
+    // end of code generated automatically
+    docs: {
+      description: {
+        component:
+          "The component which renders a breadcrumb with router links for indicating the level of navigation the user is currently in. It's Vue 2 functional component.",
+      },
+    },
+  },
   argTypes: {
     breadcrumbs: {
       control: "object",
       table: {
         category: "Props",
       },
+      description:
+        "List of breadcrumbs (array of nested objects: `[ { text, route } ]`)",
+    },
+    ariaLabel: {
+      control: "text",
+      defaultValue: "breadcrumbs",
+      table: {
+        category: "Props",
+      },
+      description: "Attribute for 'aria-label' tag.",
+    },
+    current: {
+      table: {
+        category: "Slots",
+        type: {
+          summary: null,
+        },
+      },
+      description: "Custom markup for current page (binds `breadcrumb` object)",
+    },
+    link: {
+      table: {
+        category: "Slots",
+        type: {
+          summary: null,
+        },
+      },
+      description:
+        "Custom markup for previous pages (binds `breadcrumb` object)",
     },
   },
 };
@@ -16,7 +90,7 @@ export default {
 const Template = (args, { argTypes }) => ({
   components: { SfBreadcrumbs },
   props: Object.keys(argTypes),
-  template: `<SfBreadcrumbs :breadcrumbs="breadcrumbs" />`,
+  template: `<SfBreadcrumbs :breadcrumbs="breadcrumbs" :aria-label="ariaLabel"/>`,
 });
 
 export const Common = Template.bind({});

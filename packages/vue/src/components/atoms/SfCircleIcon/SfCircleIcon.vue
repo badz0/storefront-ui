@@ -3,20 +3,17 @@
     :is="injections.components.SfButton"
     :class="[data.class, data.staticClass, 'sf-circle-icon']"
     v-bind="data.attrs"
+    :aria-label="props.ariaLabel"
     :disabled="props.disabled"
     v-on="listeners"
   >
-    <!--@slot Custom content that will replace default icon. can be used for inlined SVG's-->
     <slot>
       <component
         :is="injections.components.SfIcon"
         aria-hidden="true"
         class="sf-circle-icon__icon"
         :icon="props.icon"
-        :color="props.iconColor"
         :size="props.iconSize"
-        :badge-label="props.badgeLabel"
-        :has-badge="props.hasBadge"
       />
     </slot>
   </component>
@@ -39,10 +36,6 @@ export default {
       type: [String, Array],
       default: "home",
     },
-    iconColor: {
-      type: String,
-      default: "",
-    },
     iconSize: {
       type: String,
       default: "",
@@ -50,6 +43,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
+    },
+    ariaLabel: {
+      type: String,
+      default: "button-icon",
     },
   },
 };

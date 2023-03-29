@@ -1,13 +1,28 @@
 <template>
   <div class="sf-footer-column">
-    <button v-focus class="sf-footer-column__title" @click="toggle(title)">
+    <SfButton
+      v-focus
+      type="button"
+      class="sf-button--pure sf-footer-column__title smartphone-only"
+      @click="toggle(title)"
+    >
       {{ title }}
-      <div class="sf-footer-column__chevron">
+      <span class="sf-footer-column__chevron">
         <SfChevron :class="{ 'sf-chevron--top': isColumnOpen }" />
-      </div>
-    </button>
+      </span>
+    </SfButton>
+    <SfHeading
+      class="sf-footer-column__title desktop-only"
+      :title="title"
+      :level="5"
+    />
     <transition name="sf-fade">
-      <div v-if="isColumnOpen" class="sf-footer-column__content">
+      <div
+        :class="{
+          'sf-footer-column__content--hidden-on-mobile': !isColumnOpen,
+        }"
+        class="sf-footer-column__content"
+      >
         <slot />
       </div>
     </transition>
@@ -15,11 +30,17 @@
 </template>
 <script>
 import SfChevron from "../../../atoms/SfChevron/SfChevron.vue";
+import SfButton from "../../../atoms/SfButton/SfButton.vue";
+import SfHeading from "../../../atoms/SfHeading/SfHeading.vue";
 import { focus } from "../../../../utilities/directives";
 export default {
   name: "SfFooterColumn",
   directives: { focus },
-  components: { SfChevron },
+  components: {
+    SfChevron,
+    SfButton,
+    SfHeading,
+  },
   props: {
     title: {
       type: String,
@@ -37,6 +58,7 @@ export default {
       handler(newVal) {
         this.isColumnOpen = newVal.includes(this.title);
       },
+      immediate: true,
     },
   },
   created() {

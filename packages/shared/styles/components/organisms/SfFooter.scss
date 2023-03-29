@@ -3,6 +3,7 @@
   color: var(--c-white);
   box-sizing: border-box;
   &__title {
+    --heading-title-color: var(--c-white);
     color: var(--c-white);
     display: flex;
     justify-content: space-between;
@@ -21,6 +22,15 @@
     );
     cursor: default;
   }
+  &__content {
+    display: var(--footer-column-content-display, block);
+    &--hidden-on-mobile {
+      @include for-mobile {
+        --footer-column-content-display: none;
+      }
+    }
+  }
+
   &__chevron {
     --chevron-color: var(--c-white);  
   }  

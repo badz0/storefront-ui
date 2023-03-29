@@ -3,42 +3,85 @@ import { SfImage } from "@storefront-ui/vue";
 export default {
   title: "Components/Atoms/Image",
   component: SfImage,
+  parameters: {
+    // do not modify cssprops manually, they are generated automatically by update-components-docs script
+    cssprops: {
+      "image-width": { value: "", control: "text" },
+      "image-height": { value: "auto", control: "text" },
+      "image-overlay-padding": { value: "", control: "text" },
+      "image-overlay-background": {
+        value: "rgba(var(--c-dark-base), 0.6)",
+        control: "text",
+      },
+      "image-overlay-color": { value: "var(--c-white)", control: "text" },
+      "image-overlay-opacity": { value: "0", control: "text" },
+    },
+    // end of code generated automatically
+    docs: {
+      description: {
+        component:
+          "Image accepting string source and an array of srcsets (with breakpoints( and widths) or resolutions)",
+      },
+    },
+  },
   argTypes: {
     srcsets: {
       control: "object",
       table: {
         category: "Props",
       },
+      description:
+        "Array of images' source, dimension and breakpoints to generate srcset attribute",
     },
     src: {
       control: "text",
       table: {
         category: "Props",
       },
+      description: "Main source url for the image",
     },
     width: {
       control: "number",
       table: {
         category: "Props",
+        defaultValue: {
+          summary: null,
+        },
       },
+      defaultValue: null,
+      description:
+        "Width of the image. Could be an integer passed as Number or String type, but values like 'auto' or '100%' are not allowed.",
     },
     height: {
       control: "number",
       table: {
         category: "Props",
+        defaultValue: {
+          summary: null,
+        },
       },
+      defaultValue: null,
+      description:
+        "Height of the image. Could be an integer passed as Number or String type, but values like 'auto' or '100%' are not allowed.",
     },
     placeholder: {
       control: "text",
       table: {
         category: "Props",
       },
+      defaultValue: "",
+      description: "Url source of the image's placeholder while it is loading.",
     },
     alt: {
       control: "text",
       table: {
-        category: "Attributes",
+        category: "Props",
+        defaultValue: {
+          summary: "",
+        },
       },
+      description:
+        "Alternative text in case image is not loaded. Use empty string '' for decorative-only image and full text otherwise",
     },
     loading: {
       control: {
@@ -46,8 +89,28 @@ export default {
         options: ["", "lazy", "eager"],
       },
       table: {
-        category: "Attributes",
+        category: "Props",
       },
+      description:
+        "Native loading attribute supported, either 'eager', 'lazy' or none.",
+    },
+    default: {
+      table: {
+        category: "Slots",
+        type: {
+          summary: null,
+        },
+      },
+      description: "Use this slot to have custom element on image overlay",
+    },
+    "placeholder ": {
+      table: {
+        category: "Slots",
+        type: {
+          summary: null,
+        },
+      },
+      description: "Use this slot to have custom placeholder",
     },
   },
 };
@@ -86,23 +149,21 @@ Common.args = {
       breakpoint: 768,
     },
   ],
-  width: 216,
-  height: 326,
 };
 
 export const WithSrcOnly = Template.bind({});
 WithSrcOnly.args = {
   ...Common.args,
-  width: "",
-  height: "",
+  width: 216,
+  height: 326,
   srcsets: [],
 };
 
 export const WithBreakpoints = Template.bind({});
 WithBreakpoints.args = {
   ...Common.args,
-  width: "",
-  height: "",
+  width: 216,
+  height: 326,
 };
 
 export const WithResolutions = Template.bind({});

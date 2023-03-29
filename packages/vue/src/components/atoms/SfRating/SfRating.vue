@@ -5,7 +5,6 @@
     v-bind="data.attrs"
     v-on="listeners"
   >
-    <!--@slot custom icon for finalScore. Provide single icon that will be automatically repeated -->
     <slot
       v-for="index in Math.ceil($options.finalScore(props.score, props.max))"
       name="icon-positive"
@@ -13,7 +12,6 @@
       <component
         :is="injections.components.SfIcon"
         :key="`p${index}`"
-        size="0.875rem"
         class="sf-rating__icon"
         :icon="props.icon"
         :coverage="
@@ -48,16 +46,10 @@ export default {
     },
   },
   props: {
-    /**
-     * Maximum score
-     */
     max: {
       type: Number,
       default: 5,
     },
-    /**
-     * Score (obviously must be less than maximum)
-     */
     score: {
       type: Number,
       default: 1,
@@ -68,17 +60,9 @@ export default {
     },
   },
   finalScore(score, max) {
-    if (!score) {
-      return 0;
-    } else if (score < 0) {
-      return 0;
-    } else if (score > max && max > 0) {
-      return max;
-    } else if (max <= 0) {
-      return 0;
-    } else {
-      return score;
-    }
+    return !score || score < 0 || (score > max && max > 0) || max <= 0
+      ? 0
+      : score;
   },
   finalMax(max) {
     return !max || max <= 0 ? 1 : max;

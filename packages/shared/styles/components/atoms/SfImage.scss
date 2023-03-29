@@ -11,8 +11,8 @@
 
 .sf-image {
   object-fit: cover;
-  width: var(--image-width);
-  height: var(--image-height, auto);
+  width: var(--image-width, var(--_image-width));
+  height: var(--image-height, var(--_image-height, auto));
   display: flex;
 
   &:not(.sf-image-loaded) {
@@ -20,8 +20,10 @@
     position: absolute;
   }
 
-  &:not([alt]),
-  &[alt=""] {
+  &:not(picture):not([alt]),
+  &:not(picture)[alt=""],
+  & img:not([alt]),
+  & img[alt=""] {
     outline-color: red;
     outline-width: 1px;
     outline-style: dashed;

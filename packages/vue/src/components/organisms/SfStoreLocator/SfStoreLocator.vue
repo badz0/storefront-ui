@@ -5,7 +5,6 @@
         <div class="sf-store-locator__stores">
           Stores found: <span>{{ stores.length }}</span>
         </div>
-        <!-- @slot Use this slot to show stores cards -->
         <slot
           v-bind="{
             centerOn,
@@ -43,7 +42,6 @@
             v-bind="markerOptions"
           >
             <LIcon :icon-size="markerIconSize" :icon-anchor="markerIconAnchor">
-              <!-- @slot Use this slot to change the icon of the stores, remember to update `markerIconSize` and `markerIconAnchor` accordingly-->
               <slot name="marker-icon">
                 <SfIcon
                   v-focus
@@ -55,9 +53,11 @@
             </LIcon>
           </LMarker>
         </LMap>
-        <!-- @slot Use this slot to customise the loading indicator while the map librry loads -->
-        <slot v-if="!mapReady" name="map-loading">
-          <SfLoader class="sf-store-locator__loader" />
+        <slot name="map-loading">
+          <SfLoader
+            :class="{ 'display-none': mapReady }"
+            class="sf-store-locator__loader"
+          />
         </slot>
       </div>
     </div>
@@ -69,6 +69,7 @@ import { focus } from "../../../utilities/directives";
 import SfIcon from "../../atoms/SfIcon/SfIcon.vue";
 import SfLoader from "../../atoms/SfLoader/SfLoader.vue";
 import SfStore from "./_internal/SfStore.vue";
+
 Vue.component("SfStore", SfStore);
 export default {
   name: "SfStoreLocator",
@@ -95,80 +96,47 @@ export default {
     focus,
   },
   props: {
-    /**
-     * Url of selected tileserver
-     */
     tileServerUrl: {
       type: String,
       default:
         "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
     },
-    /**
-     * Attribution line of selected tileserver
-     */
     tileServerAttribution: {
       type: String,
       default: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ",
     },
-    /**
-     * Initial center of the map, overridden when the user position is captured, supports sync modifier
-     */
     center: {
       type: [Array, Object],
       default: () => [0, 0],
     },
-    /**
-     * Initial zoom of the map
-     */
     zoom: {
       type: Number,
       default: 6,
     },
-    /**
-     * Max zoom allowed, consider tileserver limitation when setting this
-     */
     maxZoom: {
       type: Number,
       default: 16,
     },
-    /**
-     * Size of the icon [width, height]
-     */
     markerIconSize: {
       type: Array,
       default: () => [21, 28],
     },
-    /**
-     *  Position of the anchor in the icon [x, y]
-     */
     markerIconAnchor: {
       type: Array,
       default: () => [10.5, 0],
     },
-    /**
-     * Options to pass to leaflet map
-     */
     mapOptions: {
       type: Object,
       default: () => ({}),
     },
-    /**
-     * Options to pass to leaflet tile-layer
-     */
     tileLayerOptions: {
       type: Object,
       default: () => ({}),
     },
-    /**
-     * Options to pass to leaflet marker
-     */
     markerOptions: {
       type: Object,
       default: () => ({}),
     },
-    /**
-     * Zoom to be set when centering map on clicked store
-     */
     flyToStoreZoom: {
       type: Number,
       default: 15,
@@ -203,7 +171,16 @@ export default {
       },
     },
   },
-  mounted() {
+  async mounted() {
+    // Fix lack of marker icons
+    const { Icon } = await import('leaflet');
+    delete Icon.Default.prototype._getIconUrl;
+    Icon.Default.mergeOptions({
+      iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+      iconUrl: require("leaflet/dist/images/marker-icon.png"),
+      shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+    });
+
     import("leaflet/dist/leaflet.css");
     import("vue2-leaflet").then(
       ({ LMap, LTileLayer, LMarker, LIcon, LControl, LControlZoom }) => {

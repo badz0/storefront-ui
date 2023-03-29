@@ -23,7 +23,7 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::$(cat version.txt)
       - name: Build and publish docker image
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: sfui-storefrontcloud-io/vue-storefront:${{ steps.get_version.outputs.VERSION }}
           registry: registry.storefrontcloud.io

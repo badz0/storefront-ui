@@ -20,7 +20,7 @@ const SfPrice = require("./src/components/atoms/SfPrice/SfPrice.stories.js");
 const SfProperty = require("./src/components/atoms/SfProperty/SfProperty.stories.js");
 const SfQuantitySelector = require("./src/components/atoms/SfQuantitySelector/SfQuantitySelector.stories.js");
 const SfRating = require("./src/components/atoms/SfRating/SfRating.stories.js");
-const SfTextarea = require("./src/components/atoms/SfTexarea/SfTextarea.stories.js");
+const SfTextarea = require("./src/components/atoms/SfTextarea/SfTextarea.stories.js");
 const SfAddressPicker = require("./src/components/molecules/SfAddressPicker/SfAddressPicker.stories.js");
 const SfAddToCart = require("./src/components/molecules/SfAddToCart/SfAddToCart.stories.js");
 const SfAlert = require("./src/components/molecules/SfAlert/SfAlert.stories.js");
@@ -47,7 +47,6 @@ const SfScrollable = require("./src/components/molecules/SfScrollable/SfScrollab
 const SfSearchBar = require("./src/components/molecules/SfSearchBar/SfSearchBar.stories.js");
 const SfSection = require("./src/components/molecules/SfSection/SfSection.stories.js");
 const SfSelect = require("./src/components/molecules/SfSelect/SfSelect.stories.js");
-const SfSlidingSection = require("./src/components/molecules/SfSlidingSection/SfSlidingSection.stories.js");
 const SfSteps = require("./src/components/molecules/SfSteps/SfSteps.stories.js");
 const SfSticky = require("./src/components/molecules/SfSticky/SfSticky.stories.js");
 const SfTile = require("./src/components/molecules/SfTile/SfTile.stories.js");
@@ -120,7 +119,6 @@ module.exports = {
   SfSearchBar,
   SfSection,
   SfSelect,
-  SfSlidingSection,
   SfSteps,
   SfSticky,
   SfTile,

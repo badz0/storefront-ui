@@ -1,5 +1,13 @@
 name: Run tests
-on: [push, pull_request]
+on: 
+  push:
+    branches:
+      - master
+      - develop
+  pull_request: 
+    branches:
+      - master
+      - develop
 
 jobs:
   prepare_dependencies:
@@ -60,9 +68,11 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          start: yarn storybook
+          build: yarn nuxt:generate
+          start: yarn nuxt:start
+          wait-on: 'http://localhost:3000'
           command: yarn run test:e2e:headless
-          config-file: packages/vue/cypress.json 
+          config-file: packages/nuxt/cypress.json 
 
   lighthouse:
     name: lighthouse performance test

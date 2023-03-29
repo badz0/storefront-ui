@@ -1,6 +1,5 @@
 <template>
   <div v-show="initialTabActivated" class="sf-tabs">
-    <!--@slot Default. Here you should pass your tabs-->
     <slot />
   </div>
 </template>
@@ -12,22 +11,18 @@ Vue.component("SfTab", SfTab);
 export default {
   name: "SfTabs",
   props: {
-    /** Which tab should be open  */
     openTab: {
       type: Number,
       default: 1,
     },
-    /** Max height of visible content  */
     tabMaxContentHeight: {
       type: String,
       default: "",
     },
-    /** Text for button showing content  */
     tabShowText: {
       type: String,
       default: "show",
     },
-    /** Text for button hiding content  */
     tabHideText: {
       type: String,
       default: "hide",

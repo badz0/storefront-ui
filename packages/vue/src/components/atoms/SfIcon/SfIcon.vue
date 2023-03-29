@@ -1,30 +1,25 @@
-<template functional>
+<template>
   <span
     ref="icon"
-    :class="[
-      data.class,
-      data.staticClass,
-      'sf-icon',
-      $options.iconColorClass(props.color),
-      $options.iconSizeClass(props.size),
-    ]"
-    :style="[
-      data.style,
-      data.staticStyle,
-      $options.iconCustomStyle(props.color, props.size),
-    ]"
-    v-bind="data.attrs"
-    v-on="listeners"
+    :class="['sf-icon', iconColorClass, iconSizeClass]"
+    :style="iconCustomStyle"
+    v-on="$listeners"
   >
-    <slot v-bind="{ props }">
+    <slot v-if="!isLoaded" v-bind="{ viewBox, iconPaths, icon }">
       <svg
         class="sf-icon-path"
-        :viewBox="$options.iconViewBox(props.icon, props.viewBox)"
+        :viewBox="iconViewBox"
         preserveAspectRatio="none"
       >
-        <defs v-if="props.coverage < 1">
-          <linearGradient :id="props.coverage" x1="0" y1="0" x2="1" y2="0">
-            <stop :offset="props.coverage" stop-color="var(--icon-color)" />
+        <defs :class="{ 'display-none': coverage > 1 }">
+          <linearGradient
+            :id="`linearGradient-${_uid}`"
+            x1="0"
+            y1="0"
+            x2="1"
+            y2="0"
+          >
+            <stop :offset="coverage" stop-color="var(--icon-color)" />
             <stop
               offset="0"
               stop-color="var(--icon-color-negative, var(--c-gray-variant))"
@@ -32,10 +27,10 @@
           </linearGradient>
         </defs>
         <path
-          v-for="(path, index) in $options.iconPaths(props.icon)"
+          v-for="(path, index) in iconPaths"
           :key="index"
           :d="path"
-          :fill="$options.fillPath(props.coverage)"
+          :fill="fillPath"
           style="height: 100%"
         />
       </svg>
@@ -43,109 +38,135 @@
   </span>
 </template>
 <script>
-import icons from "@storefront-ui/shared/icons/icons";
 import { iconColorsValues as SF_COLORS } from "@storefront-ui/shared/variables/colors";
 import { sizesValues as SF_SIZES } from "@storefront-ui/shared/variables/sizes";
-const SF_ICONS = Object.keys(icons);
-
 export default {
   name: "SfIcon",
-  inject: {
-    components: {
-      default: {
-        icons,
-        SF_COLORS,
-        SF_SIZES,
-        SF_ICONS,
-      },
-    },
-  },
   props: {
-    /**
-     * Icon SVG path(s)
-     * It can be single SVG path (string) or array of SVG paths or icon name
-     * from our icons list (such as 'added_to_cart`)
-     */
     icon: {
       type: [String, Array],
       default: "",
     },
-    /**
-     * Custom size of the icon
-     * It can be our standard sizes, or `12px` or `1.2rem` or nothing.
-     * Standard sizes: `xxs`, `xs`, `sm`, `md`, `lg`, `xl`, `xxl`, `xl3`, `xl4`.
-     */
     size: {
       type: String,
       default: "",
     },
-    /**
-     * Custom color of the icon
-     * It can be according to our standard colors, or legitimate CSS color such as `#fff`, `rgb(255,255,255)`), and `lightgray` or nothing.
-     * Standard colors: `white`, `black`, `green-primary`, `green-secondary`, `gray-primary`, `gray-secondary`, `light-primary`, `light-secondary`, `pink-primary`, `pink-secondary`, `yellow-primary`, `yellow-secondary`, `blue-primary`, `blue-secondary`, `accent`.
-     */
     color: {
       type: String,
       default: "",
     },
-    /**
-     * Custom viewBox size of the icon
-     * It should be according to the standard `"min-x min-y width height"`.
-     * By default it will be `0 0 24 24`. If you use our icons, you don't need to pass this prop at all.
-     * Recommendations: try to get your SVG designed with our default viewBox value and reduce the number of props passed to the component.
-     */
     viewBox: {
       type: String,
       default: "0 0 24 24",
     },
-    /**
-     * The fraction in which the icon is partially collored with --icon-color value and the rest with --icon-color-negative.
-     * To be used in SfRating.
-     * */
     coverage: {
       type: [String, Number],
       default: 1,
     },
   },
-  iconColorClass(color) {
-    const isSFColors = SF_COLORS.includes(color.trim());
-    return isSFColors ? `color-${color.trim()}` : "";
-  },
-  iconSizeClass(size) {
-    const isSFSizes = SF_SIZES.includes(size.trim());
-    return isSFSizes ? `size-${size.trim()}` : "";
-  },
-  iconCustomStyle(color, size) {
-    const isSFColors = SF_COLORS.includes(color.trim());
-    const isSFSizes = SF_SIZES.includes(size.trim());
+  data() {
     return {
-      "--icon-color": !isSFColors ? color : "",
-      "--icon-size": !isSFSizes ? size : "",
+      iconFile: null,
+      isLoaded: false,
     };
   },
-  iconViewBox(icon, viewBox) {
-    const isSFIcons = () => {
-      if (typeof icon === "string") {
-        return SF_ICONS.includes(icon.trim());
-      } else return null;
-    };
-    return isSFIcons() ? icons[icon].viewBox || viewBox : viewBox;
+  computed: {
+    isSFColors() {
+      return SF_COLORS.includes(this.color.trim());
+    },
+    isSFSizes() {
+      const size = this.size.trim();
+      return SF_SIZES.includes(size);
+    },
+    iconColorClass() {
+      return this.isSFColors ? `color-${this.color.trim()}` : "";
+    },
+    iconSizeClass() {
+      if (this.isSFSizes) {
+        switch (this.size.trim()) {
+          case "xxs":
+            return "size-xxs";
+          case "xs":
+            return "size-xs";
+          case "sm":
+            return "size-sm";
+          case "md":
+            return "size-md";
+          case "lg":
+            return "size-lg";
+          case "xl":
+            return "size-xl";
+          case "xxl":
+            return "size-xxl";
+          case "xl3":
+            return "size-xl3";
+          case "xl4":
+            return "size-xl4";
+          default:
+            return "size-lg";
+        }
+      } else {
+        return "";
+      }
+    },
+    iconCustomStyle() {
+      return {
+        "--icon-color": !this.isSFColors ? this.color : "",
+        "--icon-size": !this.isSFSizes ? this.size : "",
+      };
+    },
+    isSFIcons() {
+      return typeof this.icon === "string" && this.iconFile ? true : null;
+    },
+    iconViewBox() {
+      return this.isSFIcons
+        ? this.iconFile.viewBox || this.viewBox
+        : this.viewBox;
+    },
+    iconPaths() {
+      if (this.isSFIcons) {
+        return this.iconFile.hasOwnProperty("paths")
+          ? this.iconFile.paths
+          : Array.isArray(this.iconFile)
+          ? this.iconFile
+          : [this.iconFile];
+      } else {
+        return Array.isArray(this.icon) ? this.icon : [this.icon];
+      }
+    },
+    fillPath() {
+      return this.coverage === 1
+        ? "var(--icon-color)"
+        : this.fillPathUrl(this._uid);
+    },
   },
-  iconPaths(icon) {
-    const isSFIcons = () => {
-      if (typeof icon === "string") {
-        return SF_ICONS.includes(icon.trim());
-      } else return null;
-    };
-    if (isSFIcons()) {
-      return icons[icon].paths;
-    } else {
-      return Array.isArray(icon) ? icon : [icon];
-    }
+  watch: {
+    icon: {
+      immediate: true,
+      handler: function (value) {
+        if (value) {
+          // checks if icon file name passed, otherwise load icon path
+          if (!new RegExp("[A-Z]+[0-9]+").test(value)) {
+            this.isLoaded = true;
+            import(
+              /* webpackChunkName: "icon-[request]" */ `@storefront-ui/shared/icons/${value}`
+            )
+              .then((module) => module.default)
+              .then((icon) => {
+                this.iconFile = icon;
+                this.isLoaded = false;
+              });
+          } else {
+            this.iconFile = value;
+          }
+        }
+      },
+    },
   },
-  fillPath(coverage) {
-    const fillPathUrl = (index) => `url(#${index})`;
-    return coverage === 1 ? "var(--icon-color)" : fillPathUrl(coverage);
+  methods: {
+    fillPathUrl(uid) {
+      return `url(#linearGradient-${uid})`;
+    },
   },
 };
 </script>
